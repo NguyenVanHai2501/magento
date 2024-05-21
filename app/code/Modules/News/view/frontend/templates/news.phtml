@@ -1,0 +1,59 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<?php
+
+/**
+ * @var \Modules\News\Block\News $block
+ */
+?>
+
+<div id="content"></div>
+<?php
+$data = $block->getDataVNE();
+?>
+
+<div class="container">
+    <h1 class="text-center" style = "padding-top: 12px; padding-bottom: 24px;"> <b>Thông Tin <?= $data['title'] ?> - <?= $data['pubDate'] ?></b></h1>
+    <input type="text" id="searchBox" style="margin-bottom: 32px; width: calc(50% - 15px);" placeholder="Tìm kiếm tin tức..." onkeyup="filterNews()">
+    <div class="row"  id="newsContainer">
+    <?php foreach ($data['item'] as $k => $item) : ?>
+    <div class="col-sm-6 news-item">
+        <div class="card flex-md-row mb-4 box-shadow h-md-250">  
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="card-body d-flex flex-column align-items-start">
+                        <strong class="d-inline-block mb-2 text-primary">Nội dung chính</strong>
+                        <h4 class="mb-2">
+                            <a class="text-dark font-weight-bold" href="<?= $item['link'] ?>"><?= $item['title'] ?></a>
+                        </h4>
+                        <strong class="text-secondary font-weight mb-0"><?= $item['pubDate'] ?></strong>
+                    </div>
+                </div>
+                <a href=<?= $item['link'] ?>>
+                    <div class="col-sm-5">      
+                        <img class="card-img-right flex-auto d-none d-md-block w-100" src=<?= $item['description'] ?>>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <?php endforeach; ?>
+    </div>
+</div>
+
+<script>
+function filterNews() {
+    var input = document.getElementById('searchBox');
+    var filter = input.value.toLowerCase();
+    var newsContainer = document.getElementById('newsContainer');
+    var newsItems = newsContainer.getElementsByClassName('news-item');
+
+    for (var i = 0; i < newsItems.length; i++) {
+        var titleElement = newsItems[i].querySelector('.card-body a.text-dark');
+        if (titleElement) {
+            var titleText = titleElement.textContent || titleElement.innerText;
+            newsItems[i].style.display = titleText.toLowerCase().indexOf(filter) > -1 ? "" : "none";
+        }
+    }
+}
+</script>

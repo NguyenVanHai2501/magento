@@ -1,0 +1,46 @@
+[2024-03-28 04:48:22] main.DEBUG: array (
+  'request' => 
+  array (
+    'appid' => '2554',
+    'apptime' => 1711601301000,
+    'apptransid' => '240328_000000010',
+    'appuser' => 'Magento',
+    'item' => '[{"itemid":"AONAM6","itemname":"\\u0110\\u1ed3 \\u0110\\u00e1 Banh Tr\\u1ebb Em V\\u00e0 Ng\\u01b0\\u1eddi L\\u1edbn Ch\\u1ea5t V\\u1ea3i M\\u00e1t M\\u1ebb","itemprice":11,"itemquantity":"1.0000"}]',
+    'embeddata' => '{"merchantinfo":"boolfly"}',
+    'amount' => 11,
+    'description' => 'ZaloPay Integration for Magento 2',
+    'bankcode' => 'zalopayapp',
+    'mac' => '27eab1458188d29110962c8cf4b60dd78df3ee0740213856b7797f5c1053dcc2',
+  ),
+  'request_uri' => 'https://sandbox.zalopay.com.vn/v001/tpe/createorder',
+  'response' => 
+  array (
+    'returncode' => 1,
+    'returnmessage' => '',
+    'zptranstoken' => 'ACHHtV3m2NKJQV-eYv0xvjaQ',
+    'orderurl' => 'https://qcgateway.zalopay.vn/openinapp?order=eyJ6cHRyYW5zdG9rZW4iOiJBQ0hIdFYzbTJOS0pRVi1lWXYweHZqYVEiLCJhcHBpZCI6MjU1NH0=',
+  ),
+) [] []
+[2024-04-04 03:14:55] main.DEBUG: array (
+  'request' => 
+  array (
+    'appid' => '2554',
+    'apptime' => 1712200494000,
+    'apptransid' => '240404_000000011',
+    'appuser' => 'Magento',
+    'item' => '[{"itemid":"G1","itemname":"Gi\\u00e0y b\\u00f3ng \\u0111\\u00e1 nh\\u00e2n t\\u1ea1o Mira07 m\\u00e0u xanh d\\u01b0\\u01a1ng","itemprice":15,"itemquantity":"1.0000"}]',
+    'embeddata' => '{"merchantinfo":"boolfly"}',
+    'amount' => 20,
+    'description' => 'ZaloPay Integration for Magento 2',
+    'bankcode' => 'zalopayapp',
+    'mac' => '1c90ba3ac1ca3fd092c82e2c90e9f935ed00f69c8cfe80ca9a8244b48d2edd7a',
+  ),
+  'request_uri' => 'https://sandbox.zalopay.com.vn/v001/tpe/createorder',
+  'response' => 
+  array (
+    'returncode' => 1,
+    'returnmessage' => '',
+    'zptranstoken' => 'ACXJy5a7RtqQ2ya4jGLnbiTw',
+    'orderurl' => 'https://qcgateway.zalopay.vn/openinapp?order=eyJ6cHRyYW5zdG9rZW4iOiJBQ1hKeTVhN1J0cVEyeWE0akdMbmJpVHciLCJhcHBpZCI6MjU1NH0=',
+  ),
+) [] []

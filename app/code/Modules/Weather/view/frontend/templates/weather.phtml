@@ -1,0 +1,300 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<?php
+
+/**
+ * @var \Modules\Weather\Block\WeatherBlock $block
+ */
+?>
+<?php
+$ch = curl_init();
+$url = 'http://api.openweathermap.org/data/2.5/onecall?lat=21.027763&lon=105.834160&units=metric&lang=vi&APPID=';
+$api_key = '2fd93d34a2121d9ff3507a700d1b19ce';
+$url = $url . $api_key;
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_URL, $url);
+$result = curl_exec($ch);
+curl_close($ch);
+
+$today = date('w');
+$address = "Ha Noi, VN";
+$obj = json_decode($result);
+$lat = $obj->lat;
+$lon = $obj->lon;
+$timezone = $obj->timezone;
+$current = $obj->current;
+$daily = $obj->daily;
+?>
+<?php
+function getDayofWeekName($dayOfWeak)
+{
+  $dayOfWeak = $dayOfWeak % 7;
+  switch ($dayOfWeak) {
+    case 1:
+      return 'Thứ hai';
+    case 2:
+      return 'Thứ ba';
+    case 3:
+      return 'Thứ tư';
+    case 4:
+      return 'Thứ năm';
+    case 5:
+      return 'Thứ sáu';
+    case 6:
+      return 'Thứ bảy';
+    default:
+      return 'Chủ nhật';
+  }
+}
+
+function getIconUrl($iconName)
+{
+  return 'http://openweathermap.org/img/wn/' . $iconName . '.png';
+}
+
+function getWindDirection($wind_degress)
+{
+  if ($wind_degress >= 11.25 && $wind_degress < 33.75) {
+    return "BĐB";
+  } else if ($wind_degress >= 33.75 && $wind_degress < 56.25) {
+    return "ĐB";
+  } else if ($wind_degress >= 56.25 && $wind_degress < 78.75) {
+    return "ĐĐB";
+  } else if ($wind_degress >= 78.75 && $wind_degress < 101.25) {
+    return "Đ";
+  } else if ($wind_degress >= 101.25 && $wind_degress < 123.75) {
+    return "ĐĐN";
+  } else if ($wind_degress >= 123.57 && $wind_degress < 146.25) {
+    return "ĐN";
+  } else if ($wind_degress >= 146.25 && $wind_degress < 168.75) {
+    return "NĐN";
+  } else if ($wind_degress >= 168.75 && $wind_degress < 191.25) {
+    return "N";
+  } else if ($wind_degress >= 191.25 && $wind_degress < 213.75) {
+    return "NTN";
+  } else if ($wind_degress >= 213.75 && $wind_degress < 236.25) {
+    return "TN";
+  } else if ($wind_degress >= 236.25 && $wind_degress < 258.75) {
+    return "TTN";
+  } else if ($wind_degress >= 258.75 && $wind_degress < 281.25) {
+    return "T";
+  } else if ($wind_degress >= 281.25 && $wind_degress < 303.75) {
+    return "TTB";
+  } else if ($wind_degress >= 303.75 && $wind_degress < 326.25) {
+    return "TB";
+  } else if ($wind_degress >= 326.25 && $wind_degress < 348.75) {
+    return "BTB";
+  } else if ($wind_degress >= 348.75 && $wind_degress < 11.25) {
+    return "B";
+  }
+}
+?>
+
+<div style="display: grid; grid-template-columns: 1fr; grid-gap: 20px;">
+  <!-- <div style="margin-top: 32px; margin-bottom: 32px; width: 100%; display: inline-flex;" >
+    <input type="text" id="searchBox" style="margin-right: 32px; width: 50%;" placeholder="Tìm kiếm thời tiết..." >
+    <button onclick="filterWeather()">Tìm thời tiết</button>
+  </div> -->
+  <section class="weather-header">
+    <h2><?php echo $address; ?> - Ngày <?php echo date("d/m/Y"); ?></h2>
+  </section>
+
+  <section class="weather-current">
+    <div class="weather-details">
+      <div class="weather-icon">
+        <img src="<?php echo getIconUrl($current->weather[0]->icon); ?>" alt="Weather Icon" width="150" height="150">
+      </div>
+      <div class="weather-info">
+        <p>Mô tả: <?php echo ucfirst($current->weather[0]->description); ?></p>
+        <p>Nhiệt độ cảm nhận: <?php echo $current->feels_like; ?>°C</p>
+        <!-- Thêm các thông tin khác nếu cần -->
+        <div class="column">
+          <table class="info">
+            <tbody>
+              <tr>
+                <td>
+                  <i>- Nhiệt độ</i>: <?php echo $current->temp; ?>°C
+                </td>
+                </td>
+                <td>
+                  <i>- Độ ẩm</i>: <?php echo $current->humidity; ?>%
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i>- Hướng gió</i>: <?php echo getWindDirection($current->wind_deg) ?>
+                </td>
+                <td>
+                  <i>- Vận tốc gió</i>: <?php echo $current->wind_speed; ?> m/s
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i>- Áp suất</i>: <?php echo $current->pressure; ?> hPa
+                </td>
+                <td>
+                  <i>- Tầm nhìn</i>: <?php echo $current->visibility; ?> m
+                </td>Trời nắng
+              </tr>
+              <tr>
+                <td>
+                  <i>- Kinh độ</i>: <?php echo $lon ?>
+                </td>
+                <td>
+                  <i>- Vĩ độ</i>: <?php echo $lat ?>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i>- Múi giờ</i>: <?php echo $timezone; ?>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div> 
+      </div>
+    </div>
+  </section>
+
+  <section class="weather-forecast">
+    <ul class="forecast-list">
+      <?php foreach ($daily as $day): ?>
+        <li class="forecast-item">
+          <article class="forecast-day">
+            <h3><?php echo getDayofWeekName(date("N", $day->dt)); ?> - <?php echo date("d/m/Y", $day->dt); ?></h3>
+            <p>Nhiệt độ: <?php echo (int)$day->temp->min; ?>°C - <?php echo (int)$day->temp->max; ?>°C</p>
+            <p><?php echo ucfirst($day->weather[0]->description); ?></p>
+          </article>
+          <div class="forecast-icon">
+            <img src="<?php echo getIconUrl($day->weather[0]->icon); ?>" alt="Weather Icon" width="58" height="58">
+          </div>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </section>
+
+</div>
+<style>
+  .weather-header {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.weather-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-icon {
+  padding-right: 32px;
+}
+
+.weather-info {
+  padding-left: 32px;
+}
+
+.forecast-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 20px;
+}
+
+.forecast-item {
+  background-color: #f9f9f9;
+  border: 1px solid #e6e6e6;
+  padding: 15px;
+  border-radius: 4px;
+  transition: box-shadow .3s ease;
+}
+
+.forecast-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-day {
+  margin-bottom: 10px;
+}
+
+.forecast-icon {
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .weather-details {
+    flex-direction: row;
+  }
+}
+
+</style>
+
+
+<script> 
+function filterWeather() {
+    var input = document.getElementById('searchBox');
+      var city = input.value;
+      $.ajax({
+        method: 'GET',
+        url: 'https://api.api-ninjas.com/v1/geocoding?city=' + city,
+        headers: { 'X-Api-Key': 'mbeiUDBMd8v0a7DjImGYlg==pPFQtAIrqNRfvVw1'},
+        contentType: 'application/json',
+        success: function(apiResult) {
+            console.log(apiResult);
+            document.cookie = "apiResult = " + apiResult[0]; 
+            callPhpFunction(apiResult[0]);
+        },
+        error: function ajaxError(jqXHR) {
+            console.error('Error: ', jqXHR.responseText);
+        }
+      });
+    }
+    function callPhpFunction(param) {
+      $.ajax({
+    type: "POST",
+    url: window.location.href,
+    dataType: 'json',
+    data: {param: param, functionName: "callAPI"},
+
+    success: function (result) {
+              console.log(result);
+            },
+    error: function ajaxError(jqXHR) {
+        console.error('Error: ', jqXHR.responseText);
+    }
+});
+  }
+</script>
+
+<!-- <?php 
+  echo "Kết quả từ PHP: " . htmlspecialchars($address, ENT_QUOTES, 'UTF-8');
+  if (isset($_POST['param']) && isset($_POST['functionName'])) {
+      $apiResult = $_COOKIE['apiResult'];
+      $address =  $apiResult->name . ", " . $apiResult->country;
+
+      $ch = curl_init();
+      $url = 'http://api.openweathermap.org/data/2.5/onecall?lat=21.027763&lon=12.31231&units=metric&lang=vi&APPID=';
+      $api_key = '2fd93d34a2121d9ff3507a700d1b19ce';
+      $url = $url . $api_key;
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_URL, $url);
+      $result = curl_exec($ch);
+      curl_close($ch);
+
+      $today = date('w');
+
+      $obj = json_decode($result);
+      $lat = $obj->lat;
+      $lon = $obj->lon;
+      $timezone = $obj->timezone;
+      $current = $obj->current;
+      $daily = $obj->daily;
+
+      echo "Kết quả từ PHP: " . htmlspecialchars($address, ENT_QUOTES, 'UTF-8');
+      exit; 
+  }
+?> -->
